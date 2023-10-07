@@ -3,9 +3,9 @@ package com.example.sevenminuteworkoutapp.di
 import com.example.sevenminuteworkoutapp.data.local.ExerciseDataSourceImpl
 import com.example.sevenminuteworkoutapp.data.repository.ExerciseRepositoryImpl
 import com.example.sevenminuteworkoutapp.domain.usecase.GetExercisesUseCase
-import com.example.sevenminuteworkoutapp.presentation.screen.exercise.ExerciseScreenViewModel
-import com.example.sevenminuteworkoutapp.presentation.screen.getready.GetReadyScreenViewModel
+import com.example.sevenminuteworkoutapp.presentation.screen.exercise.ExerciseViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 val appModule = module {
@@ -23,10 +23,12 @@ val appModule = module {
     }
 
     viewModel {
-        GetReadyScreenViewModel()
+        ExerciseViewModel()
     }
 
-    viewModel {
-        ExerciseScreenViewModel(get())
+    scope(named("workoutScope")) {
+        scoped {
+            ExerciseViewModel()
+        }
     }
 }

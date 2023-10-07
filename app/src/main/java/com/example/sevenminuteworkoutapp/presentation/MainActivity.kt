@@ -12,17 +12,18 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
-import com.example.sevenminuteworkoutapp.presentation.screen.exercise.ExerciseScreenViewModel
-import com.example.sevenminuteworkoutapp.presentation.screen.getready.GetReadyScreen
-import com.example.sevenminuteworkoutapp.presentation.screen.getready.GetReadyScreenViewModel
+import com.example.sevenminuteworkoutapp.presentation.screen.exercise.GetReadyScreen
+import com.example.sevenminuteworkoutapp.presentation.screen.exercise.ExerciseViewModel
 import com.example.sevenminuteworkoutapp.presentation.screen.initial.InitialScreen
 import com.example.sevenminuteworkoutapp.presentation.ui.theme.SevenMinuteWorkoutAppTheme
 import com.example.sevenminuteworkoutapp.presentation.util.Screen
 import org.koin.android.scope.AndroidScopeComponent
-import org.koin.androidx.compose.viewModel
 import org.koin.androidx.scope.activityScope
+import org.koin.core.qualifier.named
 import org.koin.core.scope.Scope
+import org.koin.java.KoinJavaComponent.getKoin
 
 class MainActivity : ComponentActivity(), AndroidScopeComponent {
 
@@ -49,13 +50,21 @@ class MainActivity : ComponentActivity(), AndroidScopeComponent {
                         composable(route = Screen.InitialScreen.route) {
                             InitialScreen(navController = navController, screenWidth, density)
                         }
-                        composable(route = Screen.GetReadyScreen.route) {
-                            val viewModel: GetReadyScreenViewModel by viewModel()
-                            GetReadyScreen(navController = navController, viewModel = viewModel)
-                        }
-                        composable(route = Screen.ExerciseScreen.route) {
-                            val viewModel: ExerciseScreenViewModel by viewModel()
+                        navigation(
+                            startDestination = Screen.GetReadyScreen.route,
+                            route = "exercise"
+                        ) {
+                            val koin = getKoin()
+                            val exerciseScope = koin.getOrCreateScope("workout", named("workoutScope"))
 
+                            composable(route = Screen.GetReadyScreen.route) {
+                                val viewModel: ExerciseViewModel by exerciseScope.inject()
+                                GetReadyScreen(navController = navController, viewModel = viewModel)
+                            }
+                            composable(route = Screen.ExerciseScreen.route) {
+                                val viewModel: ExerciseViewModel by exerciseScope.inject()
+
+                            }
                         }
                     }
                 }

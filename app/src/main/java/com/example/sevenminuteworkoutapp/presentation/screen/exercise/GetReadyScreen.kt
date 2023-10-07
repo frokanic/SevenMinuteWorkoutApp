@@ -1,4 +1,4 @@
-package com.example.sevenminuteworkoutapp.presentation.screen.getready
+package com.example.sevenminuteworkoutapp.presentation.screen.exercise
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Column
@@ -30,7 +30,7 @@ import com.example.sevenminuteworkoutapp.presentation.util.Screen
 @Composable
 fun GetReadyScreen(
     navController: NavController,
-    viewModel: GetReadyScreenViewModel
+    viewModel: ExerciseViewModel
 ) {
     val shouldNavigate = viewModel.shouldNavigate.value
 
@@ -83,7 +83,7 @@ fun TopBar(
 @Composable
 fun GetReadyForAnimation(
     modifier: Modifier,
-    viewModel: GetReadyScreenViewModel
+    viewModel: ExerciseViewModel
 ) {
     Column(
         modifier = modifier,
